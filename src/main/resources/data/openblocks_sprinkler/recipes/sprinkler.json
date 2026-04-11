@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "ifi",
+    "iri",
+    "ifi"
+  ],
+  "key": {
+    "i": { "tag": "forge:ingots/iron" },
+    "f": { "item": "minecraft:iron_bars" },
+    "r": { "item": "minecraft:redstone_torch" }
+  },
+  "result": {
+    "item": "openblocks_sprinkler:sprinkler",
+    "count": 1
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.zeroxstudios.openblocks_sprinkler.mixins",
+  "compatibilityLevel": "JAVA_17",
+  "refmap": "openblocks_sprinkler.refmap.json",
+  "mixins": ["FarmBlockMixin"],
+  "client": [],
+  "server": []
+}
