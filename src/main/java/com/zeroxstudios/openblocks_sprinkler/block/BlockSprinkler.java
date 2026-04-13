@@ -98,10 +98,11 @@ public class BlockSprinkler extends HorizontalDirectionalBlock implements Entity
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, @NotNull BlockState state,
                                                                   @NotNull BlockEntityType<T> type) {
-        if (!level.isClientSide) {
+        if (level.isClientSide) {
+            return createTickerHelper(type, ModBlocks.SPRINKLER_BE.get(), BlockEntitySprinkler::clientTick);
+        } else {
             return createTickerHelper(type, ModBlocks.SPRINKLER_BE.get(), BlockEntitySprinkler::serverTick);
         }
-        return null;
     }
 
     @Override

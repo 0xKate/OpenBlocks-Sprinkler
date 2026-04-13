@@ -1,7 +1,10 @@
 package com.zeroxstudios.openblocks_sprinkler.block;
 
+import com.zeroxstudios.openblocks_sprinkler.fx.FXLiquidSprayData;
 import com.zeroxstudios.openblocks_sprinkler.network.ModNetwork;
 import com.zeroxstudios.openblocks_sprinkler.network.PacketSprayParticle;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
@@ -32,6 +35,8 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import static com.zeroxstudios.openblocks_sprinkler.block.BlockSprinkler.ENABLED;
 
 public class BlockEntitySprinkler extends BlockEntity implements MenuProvider {
 
@@ -84,10 +89,21 @@ public class BlockEntitySprinkler extends BlockEntity implements MenuProvider {
     public static void serverTick(Level level,
                                   BlockPos pos, BlockState state,
                                   BlockEntitySprinkler be) {
-        be.tick((ServerLevel) level, pos, state);
+        be.tickServer((ServerLevel) level, pos, state);
     }
 
-    private void tick(ServerLevel level, BlockPos pos, BlockState state) {
+    public static void clientTick(Level level, BlockPos pos, BlockState state, BlockEntitySprinkler be) {
+        be.tickClient((ClientLevel)level, pos ,state);
+    }
+
+    private void tickClient(ClientLevel level, BlockPos pos, BlockState state) {
+        if (state.getValue(ENABLED)) {
+            spawnSprayParticles(level, pos);
+            ticks++;
+        }
+    }
+
+    private void tickServer(ServerLevel level, BlockPos pos, BlockState state) {
         tryFillFromBelow(level, pos);
 
         if (ticks % WATER_CONSUME_RATE == 0) {
@@ -107,7 +123,7 @@ public class BlockEntitySprinkler extends BlockEntity implements MenuProvider {
             }
 
             if (wasEnabled != processing) {
-                level.setBlock(pos, state.setValue(BlockSprinkler.ENABLED, processing), Block.UPDATE_CLIENTS);
+                level.setBlock(pos, state.setValue(ENABLED, processing), Block.UPDATE_CLIENTS);
             }
         }
 
@@ -199,7 +215,7 @@ public class BlockEntitySprinkler extends BlockEntity implements MenuProvider {
     }
 
 
-    private void spawnSprayParticles(ServerLevel level, BlockPos pos) {
+    private void spawnSprayParticles(Level level, BlockPos pos) {
         Direction facing = getBlockState().getValue(BlockSprinkler.FACING);
 
         final double nozzleAngle = getSprayDirection();
@@ -218,22 +234,36 @@ public class BlockEntitySprinkler extends BlockEntity implements MenuProvider {
             double velX = forwardVelocityX + spraySideVelocity * offsetX;
             double velZ = forwardVelocityZ + spraySideVelocity * offsetZ;
 
-            ModNetwork.sendToNearby(
-                    new PacketSprayParticle(
-                            pos.getX() + 0.5 + (outletPosition * 0.6 * offsetX),
-                            pos.getY() + 0.10,
-                            pos.getZ() + 0.5 + (outletPosition * 0.6 * offsetZ),
-                            velX, SPRAY_Y_VELOCITY, velZ
-                    ),
-                    level, pos
-            );
+            var x = pos.getX() + 0.5 + (outletPosition * 0.6 * offsetX);
+            var y = pos.getY() + 0.10;
+            var z = pos.getZ() + 0.5 + (outletPosition * 0.6 * offsetZ);
+
+            if (level instanceof ClientLevel client) {
+                var engine = Minecraft.getInstance().particleEngine;
+                engine.createParticle(
+                        new FXLiquidSprayData("minecraft:water", 0.2f, 0.8f),
+                        x, y, z,
+                        velX, SPRAY_Y_VELOCITY, velZ
+                );
+            }
+
+
+//            ModNetwork.sendToNearby(
+//                    new PacketSprayParticle(
+//                            pos.getX() + 0.5 + (outletPosition * 0.6 * offsetX),
+//                            pos.getY() + 0.10,
+//                            pos.getZ() + 0.5 + (outletPosition * 0.6 * offsetZ),
+//                            velX, SPRAY_Y_VELOCITY, velZ
+//                    ),
+//                    level, pos
+//            );
 
             outletPosition += 0.2;
         }
     }
 
     private boolean isEnabled() {
-        return getBlockState().getValue(BlockSprinkler.ENABLED);
+        return getBlockState().getValue(ENABLED);
     }
 
     private void syncEnabled() {
