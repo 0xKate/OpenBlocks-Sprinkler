@@ -15,7 +15,7 @@ public class FXLiquidSpray extends TextureSheetParticle {
         super(level, x, y, z, dx, dy, dz);
 
         this.gravity = gravity;
-        this.lifetime = 50;
+        this.lifetime = 75;
         this.xd = dx;
         this.yd = dy;
         this.zd = dz;

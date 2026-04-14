@@ -6,6 +6,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -41,8 +42,7 @@ public class BlockSprinkler extends HorizontalDirectionalBlock implements Entity
     public BlockSprinkler() {
         super(Properties.of(Material.METAL)
                 .noOcclusion()
-                .strength(0.5f)
-                .requiresCorrectToolForDrops());
+                .strength(0.5f));
 
         this.registerDefaultState(
                 this.stateDefinition.any()
@@ -101,12 +101,16 @@ public class BlockSprinkler extends HorizontalDirectionalBlock implements Entity
     @Override
     public void onRemove(BlockState state, @NotNull Level level, @NotNull BlockPos pos, BlockState newState, boolean movedByPiston) {
         if (!state.is(newState.getBlock())) {
-
             if (level.getBlockEntity(pos) instanceof TileEntitySprinkler be) {
                 be.onBroken();
+                for (int i = 0; i < be.getInventory().getSlots(); i++) {
+                    ItemStack stack = be.getInventory().getStackInSlot(i);
+                    if (!stack.isEmpty()) {
+                        popResource(level, pos, stack);
+                    }
+                }
             }
         }
-
         super.onRemove(state, level, pos, newState, movedByPiston);
     }
 
