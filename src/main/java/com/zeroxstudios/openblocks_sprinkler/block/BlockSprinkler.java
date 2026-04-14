@@ -9,7 +9,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
@@ -71,17 +70,11 @@ public class BlockSprinkler extends HorizontalDirectionalBlock implements Entity
     }
 
     @Override
-    public @NotNull BlockState updateShape(@NotNull BlockState state, @NotNull Direction dir, @NotNull BlockState neighborState,
-                                           @NotNull LevelAccessor level, @NotNull BlockPos pos, @NotNull BlockPos neighborPos) {
-        return super.updateShape(state, dir, neighborState, level, pos, neighborPos);
-    }
-
-    @Override
     public @NotNull InteractionResult use(@NotNull BlockState state, Level level, @NotNull BlockPos pos,
                                           @NotNull Player player, @NotNull InteractionHand hand, @NotNull BlockHitResult hit) {
         if (!level.isClientSide && player instanceof ServerPlayer serverPlayer) {
             BlockEntity be = level.getBlockEntity(pos);
-            if (be instanceof BlockEntitySprinkler sprinkler) {
+            if (be instanceof TileEntitySprinkler sprinkler) {
                 NetworkHooks.openScreen(serverPlayer, sprinkler, pos);
             }
         }
@@ -91,7 +84,7 @@ public class BlockSprinkler extends HorizontalDirectionalBlock implements Entity
     @Nullable
     @Override
     public BlockEntity newBlockEntity(@NotNull BlockPos pos, @NotNull BlockState state) {
-        return new BlockEntitySprinkler(pos, state);
+        return new TileEntitySprinkler(pos, state);
     }
 
     @Nullable
@@ -99,9 +92,9 @@ public class BlockSprinkler extends HorizontalDirectionalBlock implements Entity
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, @NotNull BlockState state,
                                                                   @NotNull BlockEntityType<T> type) {
         if (level.isClientSide) {
-            return createTickerHelper(type, ModBlocks.SPRINKLER_BE.get(), BlockEntitySprinkler::clientTick);
+            return createTickerHelper(type, ModBlocks.SPRINKLER_BE.get(), TileEntitySprinkler::clientTick);
         } else {
-            return createTickerHelper(type, ModBlocks.SPRINKLER_BE.get(), BlockEntitySprinkler::serverTick);
+            return createTickerHelper(type, ModBlocks.SPRINKLER_BE.get(), TileEntitySprinkler::serverTick);
         }
     }
 
@@ -109,7 +102,7 @@ public class BlockSprinkler extends HorizontalDirectionalBlock implements Entity
     public void onRemove(BlockState state, @NotNull Level level, @NotNull BlockPos pos, BlockState newState, boolean movedByPiston) {
         if (!state.is(newState.getBlock())) {
 
-            if (level.getBlockEntity(pos) instanceof BlockEntitySprinkler be) {
+            if (level.getBlockEntity(pos) instanceof TileEntitySprinkler be) {
                 be.onBroken();
             }
         }

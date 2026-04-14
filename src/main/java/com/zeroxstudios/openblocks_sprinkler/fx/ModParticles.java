@@ -18,7 +18,7 @@ public class ModParticles {
                     () -> new ParticleType<>(false, FXLiquidSprayData.DESERIALIZER) {
                         @Override
                         public @NotNull Codec<FXLiquidSprayData> codec() {
-                            return Codec.unit(new FXLiquidSprayData("minecraft:water", 0.3f, 0.7f));
+                            return Codec.unit(new FXLiquidSprayData(0x3F76E4, 0.3f, 0.7f));
                         }
                     });
 }

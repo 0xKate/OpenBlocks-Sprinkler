@@ -1,5 +1,6 @@
 package com.zeroxstudios.openblocks_sprinkler.block;
 
+import com.zeroxstudios.openblocks_sprinkler.Config;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 
@@ -31,7 +32,7 @@ public class HydrationManager {
         Set<BlockPos> set = WATERED.get(serverLevel);
         if (set == null) return;
 
-        int range = 4; // assuming EFFECTIVE_RANGE = 4 for a 9x9 area
+        int range = Config.EFFECTIVE_RANGE.get(); // assuming EFFECTIVE_RANGE = 4 for a 9x9 area
 
         for (int dx = -range; dx <= range; dx++) {
             for (int dz = -range; dz <= range; dz++) {

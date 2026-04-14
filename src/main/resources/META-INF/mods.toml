@@ -1,6 +1,7 @@
 modLoader="javafml"
 loaderVersion="${loader_version_range}"
 license="${mod_license}"
+mixinConfigs="openblocks_sprinkler.mixins.json"
 
 [[mods]]
 modId="${mod_id}"
@@ -8,7 +9,6 @@ version="${mod_version}"
 displayName="${mod_name}"
 description='''${mod_description}'''
 authors="${mod_authors}"
-mixinConfigs="openblocks_sprinkler.mixins.json"
 
 [[dependencies.${mod_id}]]
 modId="forge"

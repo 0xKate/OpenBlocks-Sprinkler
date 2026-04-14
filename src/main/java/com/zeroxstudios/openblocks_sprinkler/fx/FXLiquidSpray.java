@@ -23,23 +23,9 @@ public class FXLiquidSpray extends TextureSheetParticle {
         this.quadSize = scale;
         this.hasPhysics = true;
         this.setSpriteFromAge(sprites);
-
-        // resolve fluid color from the fluid registry
-        var fluid = net.minecraftforge.registries.ForgeRegistries.FLUIDS
-                .getValue(ResourceLocation.parse(data.fluidId()));
-        if (fluid != null && fluid != net.minecraft.world.level.material.Fluids.EMPTY) {
-            FluidStack stack = new FluidStack(fluid, 1);
-            int color = net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions
-                    .of(fluid).getTintColor(stack);
-            this.rCol = ((color >> 16) & 0xFF) / 255f;
-            this.gCol = ((color >> 8)  & 0xFF) / 255f;
-            this.bCol = ( color        & 0xFF) / 255f;
-        } else {
-            // fallback water blue
-            this.rCol = 0.2f;
-            this.gCol = 0.3f;
-            this.bCol = 1.0f;
-        }
+        this.rCol = ((data.color() >> 16) & 0xFF) / 255f;
+        this.gCol = ((data.color() >> 8)  & 0xFF) / 255f;
+        this.bCol = ( data.color()        & 0xFF) / 255f;
     }
 
     @Override

@@ -4,6 +4,7 @@ import com.zeroxstudios.openblocks_sprinkler.ui.ModMenuTypes;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -13,9 +14,9 @@ import org.jetbrains.annotations.NotNull;
 
 public class ContainerSprinkler extends AbstractContainerMenu {
 
-    private final BlockEntitySprinkler blockEntity;
+    private final TileEntitySprinkler blockEntity;
 
-    public ContainerSprinkler(int windowId, Inventory playerInv, BlockEntitySprinkler be) {
+    public ContainerSprinkler(int windowId, Inventory playerInv, TileEntitySprinkler be) {
         super(ModMenuTypes.SPRINKLER.get(), windowId);
         this.blockEntity = be;
 
@@ -47,15 +48,16 @@ public class ContainerSprinkler extends AbstractContainerMenu {
     }
 
     @Override
-    public boolean stillValid(Player player) {
+    public boolean stillValid(@NotNull Player player) {
         return blockEntity.getLevel() != null
-                && stillValid(net.minecraft.world.inventory.ContainerLevelAccess.create(
+                && !blockEntity.isRemoved()
+                && stillValid(ContainerLevelAccess.create(
                         blockEntity.getLevel(), blockEntity.getBlockPos()),
-                        player, ModBlocks.SPRINKLER.get());
+                player, ModBlocks.SPRINKLER.get());
     }
 
     @Override
-    public @NotNull ItemStack quickMoveStack(Player player, int index) {
+    public @NotNull ItemStack quickMoveStack(@NotNull Player player, int index) {
         ItemStack remaining = ItemStack.EMPTY;
         Slot slot = this.slots.get(index);
 
@@ -88,7 +90,4 @@ public class ContainerSprinkler extends AbstractContainerMenu {
         return remaining;
     }
 
-    public BlockEntitySprinkler getBlockEntity() {
-        return blockEntity;
-    }
 }
