@@ -1,5 +1,6 @@
 package com.zeroxstudios.openblocks_sprinkler;
 
+import com.zeroxstudios.openblocks_sprinkler.block.BlockEntityRendererSprinkler;
 import com.zeroxstudios.openblocks_sprinkler.block.ModBlocks;
 import com.zeroxstudios.openblocks_sprinkler.block.ModItems;
 import com.zeroxstudios.openblocks_sprinkler.fx.FXLiquidSprayProvider;
@@ -7,6 +8,7 @@ import com.zeroxstudios.openblocks_sprinkler.fx.ModParticles;
 import com.zeroxstudios.openblocks_sprinkler.ui.ScreenSprinkler;
 import com.zeroxstudios.openblocks_sprinkler.ui.ModMenuTypes;
 import net.minecraft.client.gui.screens.MenuScreens;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -41,9 +43,10 @@ public class Initialization {
 
         @SubscribeEvent
         public static void onClientSetup(FMLClientSetupEvent event) {
-            event.enqueueWork(() ->
-                MenuScreens.register(ModMenuTypes.SPRINKLER.get(), ScreenSprinkler::new)
-            );
+            event.enqueueWork(() -> {
+                MenuScreens.register(ModMenuTypes.SPRINKLER.get(), ScreenSprinkler::new);
+                BlockEntityRenderers.register(ModBlocks.SPRINKLER_BE.get(), BlockEntityRendererSprinkler::new);
+            });
         }
 
         @SubscribeEvent

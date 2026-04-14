@@ -74,7 +74,7 @@ public class BlockSprinkler extends HorizontalDirectionalBlock implements Entity
                                           @NotNull Player player, @NotNull InteractionHand hand, @NotNull BlockHitResult hit) {
         if (!level.isClientSide && player instanceof ServerPlayer serverPlayer) {
             BlockEntity be = level.getBlockEntity(pos);
-            if (be instanceof TileEntitySprinkler sprinkler) {
+            if (be instanceof BlockEntitySprinkler sprinkler) {
                 NetworkHooks.openScreen(serverPlayer, sprinkler, pos);
             }
         }
@@ -84,24 +84,23 @@ public class BlockSprinkler extends HorizontalDirectionalBlock implements Entity
     @Nullable
     @Override
     public BlockEntity newBlockEntity(@NotNull BlockPos pos, @NotNull BlockState state) {
-        return new TileEntitySprinkler(pos, state);
+        return new BlockEntitySprinkler(pos, state);
     }
 
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, @NotNull BlockState state,
                                                                   @NotNull BlockEntityType<T> type) {
-        if (level.isClientSide) {
-            return createTickerHelper(type, ModBlocks.SPRINKLER_BE.get(), TileEntitySprinkler::clientTick);
-        } else {
-            return createTickerHelper(type, ModBlocks.SPRINKLER_BE.get(), TileEntitySprinkler::serverTick);
+        if (!level.isClientSide) {
+            return createTickerHelper(type, ModBlocks.SPRINKLER_BE.get(), BlockEntitySprinkler::serverTick);
         }
+        return null;
     }
 
     @Override
     public void onRemove(BlockState state, @NotNull Level level, @NotNull BlockPos pos, BlockState newState, boolean movedByPiston) {
         if (!state.is(newState.getBlock())) {
-            if (level.getBlockEntity(pos) instanceof TileEntitySprinkler be) {
+            if (level.getBlockEntity(pos) instanceof BlockEntitySprinkler be) {
                 be.onBroken();
                 for (int i = 0; i < be.getInventory().getSlots(); i++) {
                     ItemStack stack = be.getInventory().getStackInSlot(i);

@@ -11,13 +11,25 @@ import java.util.WeakHashMap;
 
 public class HydrationManager {
 
-    private static final Map<ServerLevel, Set<BlockPos>> WATERED = new WeakHashMap<>();
+    private static HydrationManager INSTANCE;
 
-    public static boolean isWatered(ServerLevel level, BlockPos pos) {
+    private HydrationManager() {}
+
+    public static HydrationManager get() {
+        if (INSTANCE == null) {
+            INSTANCE = new HydrationManager();
+        }
+        return INSTANCE;
+    }
+
+
+    private final Map<ServerLevel, Set<BlockPos>> WATERED = new WeakHashMap<>();
+
+    public boolean isWatered(ServerLevel level, BlockPos pos) {
         return WATERED.getOrDefault(level, Set.of()).contains(pos);
     }
 
-    public static void setWatered(ServerLevel level, BlockPos pos, boolean value) {
+    public void setWatered(ServerLevel level, BlockPos pos, boolean value) {
         WATERED.computeIfAbsent(level, l -> new HashSet<>());
 
         if (value) {
@@ -27,7 +39,7 @@ public class HydrationManager {
         }
     }
 
-    public static void clearAreaForSprinkler(ServerLevel serverLevel, BlockPos worldPosition) {
+    public void clearAreaForSprinkler(ServerLevel serverLevel, BlockPos worldPosition) {
 
         Set<BlockPos> set = WATERED.get(serverLevel);
         if (set == null) return;

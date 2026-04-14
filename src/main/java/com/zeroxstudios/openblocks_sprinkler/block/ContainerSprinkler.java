@@ -14,9 +14,9 @@ import org.jetbrains.annotations.NotNull;
 
 public class ContainerSprinkler extends AbstractContainerMenu {
 
-    private final TileEntitySprinkler blockEntity;
+    private final BlockEntitySprinkler blockEntity;
 
-    public ContainerSprinkler(int windowId, Inventory playerInv, TileEntitySprinkler be) {
+    public ContainerSprinkler(int windowId, Inventory playerInv, BlockEntitySprinkler be) {
         super(ModMenuTypes.SPRINKLER.get(), windowId);
         this.blockEntity = be;
 

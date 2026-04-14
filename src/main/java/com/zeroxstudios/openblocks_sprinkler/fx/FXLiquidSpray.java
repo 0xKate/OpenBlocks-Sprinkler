@@ -2,8 +2,6 @@ package com.zeroxstudios.openblocks_sprinkler.fx;
 
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.fluids.FluidStack;
 import org.jetbrains.annotations.NotNull;
 
 public class FXLiquidSpray extends TextureSheetParticle {
@@ -15,7 +13,7 @@ public class FXLiquidSpray extends TextureSheetParticle {
         super(level, x, y, z, dx, dy, dz);
 
         this.gravity = gravity;
-        this.lifetime = 75;
+        this.lifetime = 50;
         this.xd = dx;
         this.yd = dy;
         this.zd = dz;

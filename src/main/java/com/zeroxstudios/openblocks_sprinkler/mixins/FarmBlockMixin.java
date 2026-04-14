@@ -21,7 +21,8 @@ public class FarmBlockMixin {
                                          RandomSource random,
                                          CallbackInfo ci) {
 
-        if (HydrationManager.isWatered(level, pos)) {
+        var hm = HydrationManager.get();
+        if (hm.isWatered(level, pos)) {
             ci.cancel();
         }
     }

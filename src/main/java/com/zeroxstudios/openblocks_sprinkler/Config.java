@@ -66,7 +66,8 @@ public class Config {
 
         builder.comment("Sprinkler Range Settings").push("range");
         EFFECTIVE_RANGE = builder
-                .comment("WARNING: (Visuals May not Line Up) Radius in blocks the sprinkler affects in each cardinal direction. Default: 4")
+                .comment("(WARNING: Visuals support up to radius 8. Beyond they may be a little off.)" +
+                        " Radius in blocks the sprinkler affects in each cardinal direction. Default: 4")
                 .defineInRange("effectiveRange", 4, 1, 32);
         builder.pop();
 

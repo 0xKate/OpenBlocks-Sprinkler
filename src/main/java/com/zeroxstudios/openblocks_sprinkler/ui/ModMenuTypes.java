@@ -1,7 +1,7 @@
 package com.zeroxstudios.openblocks_sprinkler.ui;
 
 import com.zeroxstudios.openblocks_sprinkler.Initialization;
-import com.zeroxstudios.openblocks_sprinkler.block.TileEntitySprinkler;
+import com.zeroxstudios.openblocks_sprinkler.block.BlockEntitySprinkler;
 import com.zeroxstudios.openblocks_sprinkler.block.ContainerSprinkler;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraftforge.common.extensions.IForgeMenuType;
@@ -19,7 +19,8 @@ public class ModMenuTypes {
                     IForgeMenuType.create((windowId, inv, data) -> {
                         net.minecraft.core.BlockPos pos = data.readBlockPos();
                         net.minecraft.world.level.Level level = inv.player.getCommandSenderWorld();
-                        TileEntitySprinkler be = (TileEntitySprinkler) level.getBlockEntity(pos);
+                        BlockEntitySprinkler be = (BlockEntitySprinkler) level.getBlockEntity(pos);
+                        assert be != null;
                         return new ContainerSprinkler(windowId, inv, be);
                     }));
 }

@@ -18,9 +18,12 @@ public class ModBlocks {
     public static final RegistryObject<BlockSprinkler> SPRINKLER =
             BLOCKS.register("sprinkler", BlockSprinkler::new);
 
-    public static final RegistryObject<BlockEntityType<TileEntitySprinkler>> SPRINKLER_BE =
-            BLOCK_ENTITIES.register("sprinkler", () ->
-                    BlockEntityType.Builder
-                            .of(TileEntitySprinkler::new, SPRINKLER.get())
-                            .build(null));
+    @SuppressWarnings("DataFlowIssue")
+    public static final RegistryObject<BlockEntityType<BlockEntitySprinkler>> SPRINKLER_BE =
+            BLOCK_ENTITIES.register("sprinkler_block_entity", () ->
+                    BlockEntityType.Builder.of(
+                            BlockEntitySprinkler::new,
+                            SPRINKLER.get()
+                    ).build(null)
+            );
 }
