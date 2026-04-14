@@ -213,7 +213,7 @@ public class BlockEntitySprinkler extends BlockEntity implements MenuProvider {
                 BlockPos target = pos.offset(dx, -1, dz);
                 BlockState state = level.getBlockState(target);
                 if (state.is(Blocks.FARMLAND)) {
-                    if (!HydrationManager.get().isWatered(level, target)) {
+                    if (state.getValue(FarmBlock.MOISTURE) < 7) {
                         HydrationManager.get().setWatered(level, target, true);
                         level.setBlock(target, state.setValue(FarmBlock.MOISTURE, 7), Block.UPDATE_CLIENTS);
                     }
